@@ -21,4 +21,11 @@ A small planning app for contractors in the construction sector
 **Note:**
 > When installing the environment, make sure to add the path to your project directory to herd.
   
-  
+# some Screenshots:
+![login](./preview/login.png)<br>
+![calendar](./preview/calendar.png)<br>
+![agenda](./preview/agenda.png)<br>
+![read](./preview/read.png)<br>
+![update](./preview/update.png)<br>
+![types](./preview/types.png)<br>
+![profile](./preview/profile.png)<br>
