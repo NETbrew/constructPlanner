@@ -16,6 +16,7 @@ class Calendar extends Component
 
     public $showModal = false;
     public $info = false;
+    public $copy = false;
     public WorkForm $form;
     public $loading = 'loading...';
 
@@ -76,6 +77,32 @@ class Calendar extends Component
         ]);
     }
 
+    public function copyWork(Work $work) {
+        $this->resetErrorBag();
+        $this->form->fill($work);
+        $this->copy = true;
+        $this->info = false;
+    }
+    public function copyWorkToDay(Work $work, Carbon $destinationDay) {
+        // Duplicate the work attributes
+        $newWorkAttributes = $work->toArray();
+
+        // Set the date to the destination day
+        $newWorkAttributes['date'] = $destinationDay->toDateString();
+
+        // Create a new Work instance with the duplicated attributes
+        $this->form->create($newWorkAttributes);
+
+        $this->copy = false;
+        $this->showModal = false;
+
+        $this->dispatch('swal:toast', [
+            'background' => 'info',
+            'html' => "<b><i>{$work->title}</i></b> has been copied to {$destinationDay->format('F j, Y')}",
+            'icon' => 'success',
+        ]);
+    }
+
     public function getPreviousMonth()
     {
         $this->currentDate->subMonth();
@@ -90,9 +117,10 @@ class Calendar extends Component
     {
         $daysInMonth = $this->currentDate->daysInMonth;
         $firstDayOfMonth = $this->currentDate->firstOfMonth();
+        $startDayOfWeek = $firstDayOfMonth->copy()->dayOfWeek; // Adjust this line
 
-        $days = collect(range(1, $daysInMonth))->map(function ($day) use ($firstDayOfMonth) {
-            return $firstDayOfMonth->copy()->addDays($day - 1);
+        $days = collect(range(1, $daysInMonth + $startDayOfWeek))->map(function ($day) use ($firstDayOfMonth, $startDayOfWeek) {
+            return $firstDayOfMonth->copy()->subDays($startDayOfWeek)->addDays($day);
         });
 
         $user = Auth::user();

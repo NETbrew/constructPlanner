@@ -119,6 +119,11 @@
                             <p class="py-3"><span class="font-bold">Email:</span> <span class="block"><a class="underline" href="mailto:{{ $form->email }}">{{ $form->email }}<i class="fa-solid fa-arrow-up-right-from-square pl-2"></i></a></span></p>
                             <p class="py-3"><span class="font-bold">Surface:</span> <span class="block">{{ $form->squaremeters }} m2</span></p>
                             <p class="py-3"><span class="font-bold">Note:</span> <span class="block">{{ $form->note }}</span></p>
+                        @elseif($copy)
+                            <label for="title" class="pt-2">Date</label>
+                            <x-input id="title" type="date"
+                                     wire:model="form.date"
+                                     class="mt-1 block w-full"/>
                         @else
                             <label for="title">Title</label>
                             <x-input id="title" type="text"
@@ -169,14 +174,16 @@
                 {{-- add a button --}}
                 @if($info)
                     <x-button class="ml-3" wire:click="editWork({{ $form->id }})">edit Work</x-button>
-                        <x-button class="ml-3 bg-red-500 hover:bg-red-800" wire:click="deleteWork({{ $form->id }})"><i class="fa-solid fa-trash pr-2"></i>Delete</x-button>
+                    <x-button class="ml-3" wire:click="copyWork({{ $form->id }})">Copy</x-button>
+                    <x-button class="ml-3 bg-red-500 hover:bg-red-800" wire:click="deleteWork({{ $form->id }})"><i class="fa-solid fa-trash pr-2"></i>Delete</x-button>
+                @elseif($copy)
+                    <x-button class="ml-3" wire:click="copyWorkToDay({{ $form->id }})">Copy</x-button>
                 @elseif(is_null($form->id))
                     <x-button class="ml-3" wire:click="createWork">Add Work</x-button>
                 @else
                     <x-button class="ml-3" wire:click="updateWork({{ $form->id }})">Update Work</x-button>
-                        <x-button class="ml-3 bg-red-500 hover:bg-red-800" wire:click="deleteWork({{ $form->id }})"><i class="fa-solid fa-trash pr-2"></i>Delete</x-button>
+                    <x-button class="ml-3 bg-red-500 hover:bg-red-800" wire:click="deleteWork({{ $form->id }})"><i class="fa-solid fa-trash pr-2"></i>Delete</x-button>
                 @endif
-
             </x-slot>
         </x-dialog-modal>
     </div>
